@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SensorReading {
+  id          Int      @id @default(autoincrement())
+  timestamp   DateTime @default(now())
+  source      String
+  parameters  String   // JSON stringified parameters
+  rawPayload  String   // JSON stringified original payload
+  anomalies   AnomalyResult[]
+}
+
+model AnomalyResult {
+  id             Int           @id @default(autoincrement())
+  readingId      Int
+  reading        SensorReading @relation(fields: [readingId], references: [id])
+  timestamp      DateTime      @default(now())
+  ensembleScore  Float
+  iforestScore   Float?
+  lofScore       Float?
+  copodScore     Float?
+  isAnomaly      Boolean       @default(false)
+  severity       String        // normal, low, medium, high, critical
+  alerts         Alert[]
+}
+
+model Alert {
+  id               Int           @id @default(autoincrement())
+  anomalyResultId  Int
+  anomalyResult    AnomalyResult @relation(fields: [anomalyResultId], references: [id])
+  timestamp        DateTime      @default(now())
+  parameter        String
+  value            Float
+  anomalyScore     Float
+  severity         String
+  message          String
+  acknowledged     Boolean       @default(false)
+  acknowledgedAt   DateTime?
+  notified         Boolean       @default(false)
+}
+
+model ModelRegistry {
+  id                Int      @id @default(autoincrement())
+  modelName         String
+  algorithm         String   // iforest, lof, copod, ensemble
+  trainedAt         DateTime @default(now())
+  trainingSamples   Int
+  contaminationRate Float
+  isActive          Boolean  @default(false)
+  notes             String?
+}

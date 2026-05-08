@@ -23,66 +23,64 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       if (username === 'masterclass' && password === 'agentic26') {
         onLogin();
       } else {
-        setError('Invalid credentials. Please try again.');
+        setError('UNAUTHORIZED_ACCESS_VECTOR_DENIED');
         setIsLoading(false);
       }
     }, 800);
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Background Decorative Elements - Subtle Silicon Valley Style */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-50/40 rounded-full blur-[140px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-slate-50/40 rounded-full blur-[140px]" />
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-indigo-50/30 rounded-full blur-[100px]" />
+    <div className="min-h-screen bg-[#0a0f1d] flex items-center justify-center p-8 relative overflow-hidden font-sans noise-bg">
+      <div className="fixed inset-0 pointer-events-none z-[-1]">
+        <div className="absolute top-0 right-0 w-[60vw] h-[60vh] bg-blue-600/10 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-0 w-[40vw] h-[40vh] bg-indigo-600/10 rounded-full blur-[120px]" />
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-[440px] relative z-10"
+        initial={{ opacity: 0, scale: 0.95, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-[480px] relative z-10"
       >
-        <div className="bg-white/80 backdrop-blur-2xl p-12 rounded-[3rem] border border-slate-100 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] space-y-10">
-          <div className="space-y-6">
-            <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center shadow-2xl shadow-slate-900/20">
-              <ShieldAlert className="w-7 h-7 text-white" />
+        <div className="glass p-16 rounded-[4rem] border border-white/5 shadow-[0_64px_128px_-12px_rgba(0,0,0,0.5)] space-y-12">
+          <div className="space-y-8 text-center sm:text-left">
+            <div className="w-16 h-16 bg-blue-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/20 mx-auto sm:mx-0 border border-white/10">
+              <ShieldAlert className="w-8 h-8 text-white" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight leading-none">Access Portal</h1>
-              <p className="text-sm font-medium text-slate-500 leading-relaxed">
-                Enter your credentials to access the <span className="text-slate-900 font-bold">PetroGuard AI</span> masterclass environment.
+            <div className="space-y-3">
+              <h1 className="text-4xl font-black text-white tracking-tighter leading-none uppercase">Neural Access</h1>
+              <p className="text-[11px] font-black text-slate-500 leading-relaxed uppercase tracking-[0.2em]">
+                SYNCHRONIZE CREDENTIALS TO INITIALIZE <span className="text-blue-400 font-black">PETROGUARD V4.0</span>
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.1em] ml-1">Identity</label>
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] ml-1">Identity Vector</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-slate-900 transition-colors" />
+                  <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:bg-white focus:border-slate-200 transition-all placeholder:text-slate-300"
-                    placeholder="Username"
+                    className="w-full pl-14 pr-6 py-5 glass border-white/5 rounded-2xl text-xs font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-slate-800 transition-all shadow-inner"
+                    placeholder="USERNAME"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.1em] ml-1">Security Key</label>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] ml-1">Security Manifold</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-slate-900 transition-colors" />
+                  <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:bg-white focus:border-slate-200 transition-all placeholder:text-slate-300"
+                    className="w-full pl-14 pr-6 py-5 glass border-white/5 rounded-2xl text-xs font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-slate-800 transition-all shadow-inner"
                     placeholder="••••••••"
                     required
                   />
@@ -92,12 +90,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
             {error && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-3 p-4 bg-rose-50/50 rounded-2xl border border-rose-100"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-4 p-5 bg-rose-500/10 rounded-2xl border border-rose-500/20 shadow-inner"
               >
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                <p className="text-xs font-bold text-rose-600 leading-tight">{error}</p>
+                <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />
+                <p className="text-[10px] font-black text-rose-400 leading-tight uppercase tracking-widest">{error}</p>
               </motion.div>
             )}
 
@@ -105,30 +103,30 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               type="submit"
               disabled={isLoading}
               className={cn(
-                "w-full py-4.5 bg-slate-900 text-white rounded-2xl font-black text-sm flex items-center justify-center gap-3 hover:bg-slate-800 active:scale-[0.98] transition-all shadow-xl shadow-slate-900/10",
-                isLoading && "opacity-70 cursor-not-allowed"
+                "w-full py-6 bg-white text-slate-900 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-4 hover:bg-blue-400 active:scale-[0.98] transition-all shadow-2xl",
+                isLoading && "opacity-70 cursor-not-allowed bg-slate-800"
               )}
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
               ) : (
                 <>
-                  Sign In
-                  <ArrowRight className="w-4 h-4" />
+                  INITIALIZE SYNC
+                  <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </button>
           </form>
 
-          <footer className="pt-8 border-t border-slate-50 flex items-center justify-between">
-            <div className="space-y-0.5">
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Patria & Co.</p>
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Strategic Advisory</p>
+          <footer className="pt-10 border-t border-white/5 flex items-center justify-between">
+            <div className="space-y-1 text-left">
+              <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] leading-none">Patria & Co.</p>
+              <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Global Intelligence</p>
             </div>
-            <div className="flex gap-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+            <div className="flex gap-3">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-white/5 border border-white/10" />
+              <div className="w-2 h-2 rounded-full bg-white/5 border border-white/10" />
             </div>
           </footer>
         </div>

@@ -7,14 +7,18 @@ import { dispatch } from '../alerts/notifier';
 
 export const simulationEvents = new EventEmitter();
 
-let interval: NodeJS.Timeout | null = null;
+let simulationTimeout: NodeJS.Timeout | null = null;
+let isSimulationRunning = false;
 
 export function startSimulation() {
-  if (interval) return;
+  if (isSimulationRunning) return;
 
   console.log('Starting PetroGuard AI Simulation Engine...');
+  isSimulationRunning = true;
 
-  interval = setInterval(async () => {
+  async function runStep() {
+    if (!isSimulationRunning) return;
+
     const payload = generateMockPayload();
     
     try {
@@ -40,27 +44,43 @@ export function startSimulation() {
       if (prediction.is_anomaly) {
         const alerts = evaluateAndGenerate(prediction);
         for (const alert of alerts) {
-          const savedAlert = await saveAlert({
-            anomalyResultId: result.id,
-            ...alert,
-          });
-          await dispatch(savedAlert);
+          try {
+            const savedAlert = await saveAlert({
+              anomalyResultId: result.id,
+              ...alert,
+            });
+            await dispatch(savedAlert);
+          } catch (alertErr) {
+            console.error('Failed to save simulation alert:', alertErr);
+          }
         }
       }
 
       // 5. Broadcast
       simulationEvents.emit('prediction', prediction);
       
-    } catch (err) {
-      console.error('Simulation Step Error:', err);
+    } catch (err: any) {
+      console.error('Simulation Step Error:', {
+        message: err.message,
+        code: err.code,
+        meta: err.meta,
+        stack: err.stack,
+      });
     }
-  }, 2000); // Every 2 seconds
+
+    if (isSimulationRunning) {
+      simulationTimeout = setTimeout(runStep, 2000);
+    }
+  }
+
+  runStep();
 }
 
 export function stopSimulation() {
-  if (interval) {
-    clearInterval(interval);
-    interval = null;
+  isSimulationRunning = false;
+  if (simulationTimeout) {
+    clearTimeout(simulationTimeout);
+    simulationTimeout = null;
   }
 }
 

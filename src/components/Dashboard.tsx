@@ -96,12 +96,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const displayData = latest || snapshot;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex overflow-hidden">
-      {/* Liquid Sidebar */}
+    <div className="min-h-screen bg-[#0a0f1d] text-slate-100 font-sans flex overflow-hidden noise-bg">
+      <div className="absolute inset-0 mesh-bg opacity-30 pointer-events-none" />
+
+      {/* Detached Floating Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: sidebarCollapsed ? 88 : 280 }}
-        className="relative bg-white border-r border-slate-200 flex flex-col z-50 shadow-2xl shadow-slate-200/50"
+        animate={{ 
+          width: sidebarCollapsed ? 88 : 280,
+          x: 20,
+          y: 20,
+          height: 'calc(100vh - 40px)'
+        }}
+        className="fixed left-0 top-0 glass rounded-[2.5rem] flex flex-col z-[60] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] border-white/5 overflow-hidden"
       >
         <div className="p-6 flex items-center justify-between">
           <AnimatePresence mode="wait">
@@ -112,16 +119,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                 exit={{ opacity: 0, x: -10 }}
                 className="flex items-center gap-3"
               >
-                <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                   <ShieldCheck className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-lg font-black tracking-tighter text-slate-900">PetroGuard<span className="text-blue-600">AI</span></span>
+                <span className="text-xl font-black tracking-tighter text-white">PetroGuard<span className="text-blue-400">AI</span></span>
               </motion.div>
             )}
           </AnimatePresence>
           <button 
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-400 hover:text-slate-900"
+            className="p-2 hover:bg-white/10 rounded-xl transition-colors text-slate-500 hover:text-white"
           >
             {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
           </button>
@@ -144,11 +151,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
               className={cn(
                 "w-full flex items-center gap-4 p-3 rounded-2xl transition-all duration-300 group relative",
                 activeTab === item.id 
-                  ? "bg-blue-50 text-blue-600 shadow-sm" 
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-blue-600/10 text-blue-400 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] border border-white/5" 
+                  : "text-slate-500 hover:bg-white/5 hover:text-slate-200"
               )}
             >
-              <item.icon className={cn("w-5 h-5 transition-transform duration-300", activeTab === item.id ? "text-blue-600 scale-110" : "text-slate-400 group-hover:text-slate-900 group-hover:scale-110")} />
+              <item.icon className={cn("w-5 h-5 transition-transform duration-300", activeTab === item.id ? "text-blue-400 scale-110" : "text-slate-600 group-hover:text-slate-200 group-hover:scale-110")} />
               {!sidebarCollapsed && (
                 <span className="text-sm font-bold tracking-tight">{item.label}</span>
               )}
@@ -166,18 +173,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
           ))}
         </nav>
 
-        <div className="p-4 mt-auto border-t border-slate-100">
+        <div className="p-4 mt-auto border-t border-white/5">
           <div className={cn(
-            "p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3",
+            "p-3 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-3",
             sidebarCollapsed ? "justify-center" : ""
           )}>
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-black">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-black text-xs shadow-inner">
               HP
             </div>
             {!sidebarCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-black text-slate-900 truncate">Harry Patria</p>
-                <p className="text-[10px] font-bold text-slate-400 truncate">System Admin</p>
+                <p className="text-xs font-black text-white truncate">Harry Patria</p>
+                <p className="text-[10px] font-bold text-slate-500 truncate">System Admin</p>
               </div>
             )}
           </div>
@@ -185,7 +192,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       </motion.aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <div className={cn(
+        "flex-1 flex flex-col h-screen overflow-hidden relative transition-all duration-500",
+        sidebarCollapsed ? "ml-[108px]" : "ml-[300px]"
+      )}>
         {/* Floating Help Widget */}
         <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
           <AnimatePresence>
@@ -255,32 +265,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </div>
 
         {/* Header */}
-        <header className="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-8 flex items-center justify-between z-40">
+        <header className="h-20 glass mx-8 mt-6 rounded-[2rem] px-8 flex items-center justify-between z-40 border-white/5 shadow-2xl">
           <div className="flex items-center gap-6">
             <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
               <input 
                 type="text" 
-                placeholder="Search sensors, alerts, or reports..." 
-                className="pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium w-80 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all"
+                placeholder="Search telemetry..." 
+                className="pl-10 pr-4 py-2.5 bg-slate-900/40 border border-white/5 rounded-2xl text-sm font-medium w-64 focus:w-80 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-slate-900/60 transition-all text-white placeholder:text-slate-600"
               />
             </div>
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-900/40 rounded-2xl border border-white/5">
               <div className={cn(
                 "w-2 h-2 rounded-full animate-pulse",
                 connected ? "bg-emerald-500" : "bg-rose-500"
               )} />
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
-                {connected ? "Live Stream Active" : "Stream Offline"}
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                {connected ? "Stream Active" : "Offline"}
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <button className="p-2.5 hover:bg-slate-100 rounded-2xl transition-all duration-300 text-slate-400 hover:text-slate-900 relative active:scale-95">
+              <button className="p-2.5 hover:bg-white/10 rounded-2xl transition-all duration-300 text-slate-400 hover:text-white relative active:scale-95">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white shadow-sm" />
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-slate-900 shadow-sm" />
               </button>
               <div className="absolute top-full mt-3 right-0 w-64 bg-white rounded-2xl shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] border border-slate-100 p-4 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Recent Notifications</p>
@@ -328,13 +338,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         </header>
 
         {/* Content Scroll Area */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/50">
-          <div className="max-w-[1400px] mx-auto p-8 space-y-8">
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto p-8 pt-4 space-y-8">
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center gap-3 text-rose-600 shadow-sm"
+                className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center gap-3 text-rose-400 shadow-sm glass"
               >
                 <ZapOff className="w-5 h-5" />
                 <p className="text-sm font-bold">{error}</p>
@@ -353,67 +363,64 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Status Banner */}
                     <div className={cn(
-                      "lg:col-span-2 p-8 rounded-[2.5rem] border flex items-center justify-between shadow-xl shadow-slate-200/40 transition-all duration-700 relative overflow-hidden",
-                      displayData ? getSeverityBg(displayData.severity) : "bg-white border-slate-200"
+                      "lg:col-span-2 p-10 rounded-[3rem] border flex items-center justify-between shadow-2xl transition-all duration-700 relative overflow-hidden glass",
+                      displayData ? (displayData.is_anomaly ? "border-rose-500/20" : "border-emerald-500/20") : "border-white/5"
                     )}>
-                      <div className="relative z-10 space-y-4">
+                      <div className="relative z-10 space-y-6">
                         <div className="flex items-center gap-3">
-                          <div className={cn("p-2 rounded-xl", displayData ? getSeverityBg(displayData.severity) : "bg-slate-100")}>
-                            {displayData?.is_anomaly ? <AlertCircle className="w-5 h-5" /> : <ShieldCheck className="w-5 h-5" />}
+                          <div className={cn(
+                            "p-3 rounded-2xl", 
+                            displayData?.is_anomaly ? "bg-rose-500/20 text-rose-400" : "bg-emerald-500/20 text-emerald-400"
+                          )}>
+                            {displayData?.is_anomaly ? <AlertCircle className="w-6 h-6" /> : <ShieldCheck className="w-6 h-6" />}
                           </div>
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">System Integrity Status</span>
+                          <span className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">System Integrity Status</span>
                         </div>
                         <div>
-                          <h2 className="text-4xl font-black text-slate-900 tracking-tighter">
-                            {displayData ? (displayData.is_anomaly ? "Anomaly Detected" : "System Stable") : "Initializing..."}
+                          <h2 className="text-5xl font-black text-white tracking-tighter">
+                            {displayData ? (displayData.is_anomaly ? "Anomaly Detected" : "System Balanced") : "Synthesizing..."}
                           </h2>
-                          <p className={cn("text-sm font-bold mt-1", displayData ? getSeverityColor(displayData.severity) : "text-slate-400")}>
-                            {displayData ? `Current Severity: ${displayData.severity.toUpperCase()}` : "Analyzing process streams..."}
+                          <p className={cn("text-sm font-bold mt-2", displayData ? getSeverityColor(displayData.severity) : "text-slate-500")}>
+                            {displayData ? `Global Severity: ${displayData.severity.toUpperCase()}` : "Mapping process manifold..."}
                           </p>
                         </div>
                       </div>
                       <div className="text-right relative z-10">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Ensemble Confidence</span>
-                        <p className="text-6xl font-black text-slate-900 tracking-tighter">
+                        <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest block mb-1">Ensemble Confidence</span>
+                        <p className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500 tracking-tighter">
                           {displayData ? (displayData.ensemble_score * 100).toFixed(1) : "0.0"}%
                         </p>
                       </div>
-                      {/* Decorative Background Element */}
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
+                      <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
                     </div>
 
                     {/* Quick Stats */}
-                    <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/40 flex flex-col justify-center space-y-6">
+                    <div className="glass p-10 rounded-[3rem] shadow-2xl flex flex-col justify-center space-y-8 border-white/5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Alerts</p>
-                          <p className="text-3xl font-black text-slate-900">{alerts.length}</p>
+                          <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Active Alerts</p>
+                          <p className="text-4xl font-black text-white">{alerts.length}</p>
                         </div>
-                        <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600">
-                          <Bell className="w-6 h-6" />
+                        <div className="w-14 h-14 bg-rose-500/10 rounded-3xl flex items-center justify-center text-rose-500 shadow-inner">
+                          <Bell className="w-7 h-7" />
                         </div>
                       </div>
-                      <div className="h-[1px] bg-slate-100" />
+                      <div className="h-[1px] bg-white/5" />
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Snapshot Sync</p>
+                          <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Sync Manifold</p>
                           <div className="flex items-center gap-2">
-                            <p className="text-2xl font-black text-slate-900">
-                              {lastSnapshotTime ? format(lastSnapshotTime, 'HH:mm:ss') : 'Active'}
+                            <p className="text-2xl font-black text-white">
+                              {lastSnapshotTime ? format(lastSnapshotTime, 'HH:mm:ss') : 'LIVE'}
                             </p>
-                            {snapshotLoading && <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />}
+                            {snapshotLoading && <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />}
                           </div>
-                          {lastSnapshotTime && (
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                              Last Updated: {format(lastSnapshotTime, 'MMM dd, HH:mm:ss')}
-                            </p>
-                          )}
                         </div>
                         <button 
                           onClick={fetchSnapshot}
-                          className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-all shadow-sm group"
+                          className="w-14 h-14 bg-blue-500/10 rounded-3xl flex items-center justify-center text-blue-400 hover:bg-blue-500/20 transition-all shadow-inner group active:scale-90"
                         >
-                          <RefreshCw className={cn("w-6 h-6 transition-transform duration-500", snapshotLoading && "animate-spin", !snapshotLoading && "group-hover:rotate-180")} />
+                          <RefreshCw className={cn("w-7 h-7 transition-transform duration-700", snapshotLoading && "animate-spin", !snapshotLoading && "group-hover:rotate-180")} />
                         </button>
                       </div>
                     </div>
@@ -421,37 +428,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
                   <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                     <div className="xl:col-span-2 space-y-8">
-                      <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl shadow-slate-200/40">
-                        <div className="flex items-center justify-between mb-8">
+                      <div className="glass p-10 rounded-[3rem] shadow-2xl border-white/5">
+                        <div className="flex items-center justify-between mb-10">
                           <div className="space-y-1">
-                            <h3 className="text-lg font-black text-slate-900 tracking-tight">Anomaly Score History</h3>
-                            <p className="text-xs font-bold text-slate-400">Real-time ensemble prediction trend (Last 200 samples)</p>
+                            <h3 className="text-xl font-black text-white tracking-tight">Anomaly Vector History</h3>
+                            <p className="text-xs font-bold text-slate-500">Real-time manifold prediction trend • Last 200 samples</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 rounded-xl text-[10px] font-black text-blue-600 uppercase tracking-widest">
-                              <Zap className="w-3 h-3 fill-current" /> Live
+                          <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 rounded-2xl text-[10px] font-black text-blue-400 uppercase tracking-widest border border-blue-500/20">
+                              <Zap className="w-3.5 h-3.5 fill-current" /> Live Manifold
                             </span>
                           </div>
                         </div>
                         <AnomalyChart history={history} />
                       </div>
 
-                      <div className="space-y-6">
-                        <div className="flex items-center justify-between px-2">
-                          <div className="flex items-center gap-3">
-                            <h3 className="text-lg font-black text-slate-900 tracking-tight">Process Parameters</h3>
-                            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 rounded-lg text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                              <Clock className="w-3 h-3" /> {snapshotLoading ? "Syncing..." : "Latest Snapshot"}
+                      <div className="space-y-8">
+                        <div className="flex items-center justify-between px-4">
+                          <div className="flex items-center gap-4">
+                            <h3 className="text-xl font-black text-white tracking-tight">Process Manifolds</h3>
+                            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-xl text-[10px] font-black text-slate-500 uppercase tracking-widest border border-white/5">
+                              <Clock className="w-3.5 h-3.5" /> {snapshotLoading ? "Syncing..." : "Latest Telemetry"}
                             </div>
-                            {lastSnapshotTime && !snapshotLoading && (
-                              <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">
-                                {format(lastSnapshotTime, 'HH:mm:ss')}
-                              </span>
-                            )}
                           </div>
-                          <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">Configure Grid</button>
+                          <button className="text-[11px] font-black text-blue-400 uppercase tracking-widest hover:text-blue-300 transition-colors">Grid Config</button>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                           {displayData ? (
                             Object.entries(displayData.parameters).map(([name, res]: [string, any]) => (
                               <ParameterCard
@@ -469,7 +471,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                             ))
                           ) : (
                             Array.from({ length: 6 }).map((_, i) => (
-                              <div key={i} className="h-48 bg-white rounded-[2rem] animate-pulse border border-slate-100 shadow-sm" />
+                              <div key={i} className="h-64 glass rounded-[2.5rem] animate-pulse border-white/5" />
                             ))
                           )}
                         </div>
